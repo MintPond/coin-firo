@@ -7244,6 +7244,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand,
         CBlockHeaderAndShortTxIDs cmpctblock;
         vRecv >> cmpctblock;
 
+        // MintPond
+        LogPrint("blocks", "NetMsgType::CMPCTBLOCK received block %s peer=%d addrName=%s\n", cmpctblock.header.GetHash().ToString(), pfrom->id, pfrom->addrName);
+        LogPrint("net", "received block %s peer=%d\n", cmpctblock.header.GetHash().ToString(), pfrom->id);
+
         // Keep a CBlock for "optimistic" compactblock reconstructions (see
         // below)
         CBlock block;
@@ -7653,6 +7657,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand,
     {
         CBlock block;
         vRecv >> block;
+
+        // MintPond
+        LogPrint("blocks", "NetMsgType::BLOCK received block %s peer=%d addrName=%s\n", block.GetHash().ToString(), pfrom->id, pfrom->addrName);
+
         LogPrint("net", "received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
         CValidationState state;
         // Process all blocks from whitelisted peers, even if not requested,
