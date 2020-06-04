@@ -24,7 +24,7 @@
 #include "elysium/wallettxs.h"
 
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "primitives/transaction.h"
 #include "sync.h"
 #include "txdb.h"
@@ -164,7 +164,7 @@ void TXHistoryDialog::setClientModel(ClientModel *model)
     this->clientModel = model;
     if (model != NULL) {
         connect(model, SIGNAL(refreshElysiumBalance()), this, SLOT(UpdateHistory()));
-        connect(model, SIGNAL(numBlocksChanged(int)), this, SLOT(UpdateConfirmations()));
+        connect(model, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(UpdateConfirmations()));
         connect(model, SIGNAL(reinitElysiumState()), this, SLOT(ReinitTXHistoryTable()));
     }
 }
@@ -217,7 +217,7 @@ int TXHistoryDialog::PopulateHistoryMap()
             ui->txHistoryTable->setSortingEnabled(true); // re-enable sorting
         }
 
-        CTransaction wtx;
+        CTransactionRef wtx;
         uint256 blockHash;
         if (!GetTransaction(txHash, wtx, Params().GetConsensus(), blockHash, true)) continue;
         if (blockHash.IsNull() || NULL == GetBlockIndex(blockHash)) {
@@ -255,7 +255,7 @@ int TXHistoryDialog::PopulateHistoryMap()
         if (NULL == pBlockIndex) continue;
         int blockHeight = pBlockIndex->nHeight;
         CMPTransaction mp_obj;
-        int parseRC = ParseTransaction(wtx, blockHeight, 0, mp_obj);
+        int parseRC = ParseTransaction(*wtx, blockHeight, 0, mp_obj);
         HistoryTXObject htxo;
         if (it->first.length() == 16) {
             htxo.blockHeight = atoi(it->first.substr(0,6));
