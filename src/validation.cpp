@@ -4167,6 +4167,7 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, const 
             final_hash = block.GetProgPowHashFull(exp_mix_hash);
             if (exp_mix_hash != block.mix_hash)
             {
+                LogPrint("blocks", "exp=%s, block=%s\n", exp_mix_hash.GetHex(), block.mix_hash.GetHex());
                 return state.DoS(50, false, REJECT_INVALID, "invalid-mixhash", false, "mix_hash validity failed");
             }
         } else {
