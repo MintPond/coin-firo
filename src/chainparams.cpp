@@ -909,8 +909,8 @@ public:
         
         // ProgPow
         // this can be overridden with either -ppswitchtime or -ppswitchtimefromnow flags
-        consensus.nPPSwitchTime = INT_MAX;
-        consensus.nInitialPPDifficulty = 0x2000ffff;
+        consensus.nPPSwitchTime = 1629390190;
+        consensus.nInitialPPDifficulty = 0x1d02dd02;    // 5Mh/s for 5 mins per block
     }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)

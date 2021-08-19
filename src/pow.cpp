@@ -40,6 +40,9 @@ double GetDifficultyHelper(unsigned int nBits) {
 
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
+    if (params.fPowNoRetargeting)
+        return pblock->IsProgPow() ? params.nInitialPPDifficulty : params.nFixedDifficulty;
+
     if (!pindexLast || pindexLast->nHeight < params.nDifficultyAdjustStartBlock)
         return params.nFixedDifficulty;
 
