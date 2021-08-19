@@ -695,32 +695,50 @@ bool ContextualCheckTransaction(const CTransaction& tx, CValidationState &state,
     if (fDIP0003Active_context) {
         // check version 3 transaction types
         if (tx.nVersion >= 3) {
-            if (tx.nType != TRANSACTION_NORMAL &&
-                tx.nType != TRANSACTION_PROVIDER_REGISTER &&
-                tx.nType != TRANSACTION_PROVIDER_UPDATE_SERVICE &&
-                tx.nType != TRANSACTION_PROVIDER_UPDATE_REGISTRAR &&
-                tx.nType != TRANSACTION_PROVIDER_UPDATE_REVOKE &&
-                tx.nType != TRANSACTION_COINBASE &&
-                tx.nType != TRANSACTION_QUORUM_COMMITMENT &&
-                tx.nType != TRANSACTION_SPORK &&
-                tx.nType != TRANSACTION_LELANTUS) {
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type");
+
+            if (tx.nType != TRANSACTION_NORMAL) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 1");
             }
+            else if (tx.nType != TRANSACTION_PROVIDER_REGISTER) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 2");
+            }
+            else if (tx.nType != TRANSACTION_PROVIDER_UPDATE_SERVICE) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 3");
+            }
+            else if (tx.nType != TRANSACTION_PROVIDER_UPDATE_REGISTRAR) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 4");
+            }
+            else if (tx.nType != TRANSACTION_PROVIDER_UPDATE_SERVICE) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 5");
+            }
+            else if (tx.nType != TRANSACTION_COINBASE) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 6");
+            }
+            else if (tx.nType != TRANSACTION_QUORUM_COMMITMENT) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 7");
+            }
+            else if (tx.nType != TRANSACTION_SPORK) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 8");
+            }
+            else if (tx.nType != TRANSACTION_LELANTUS) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 9");
+            }
+
             if (tx.IsCoinBase() && tx.nType != TRANSACTION_COINBASE)
                 return state.DoS(100, false, REJECT_INVALID, "bad-txns-cb-type");
             if (tx.nType == TRANSACTION_SPORK &&
                     !(nHeight >= consensusParams.nEvoSporkStartBlock && nHeight < consensusParams.nEvoSporkStopBlock))
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type");
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 2");
             if (tx.nType == TRANSACTION_LELANTUS && nHeight < consensusParams.nLelantusV3PayloadStartBlock)
-                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type");
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 3");
         }
         else if (tx.nType != TRANSACTION_NORMAL) {
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-type");
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 4");
         }
     }
     else {
         if (tx.nVersion >= 3)
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-type");
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-type 5");
     }
 
     return true;
